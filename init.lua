@@ -42,11 +42,11 @@ P.S. You can delete this when you're done too. It's your config now :)
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
 
-require("settings")
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    https://github.com/folke/lazy.nvim
 --    `:help lazy.nvim.txt` for more info
+
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system {
@@ -68,7 +68,51 @@ vim.opt.rtp:prepend(lazypath)
 --    as they will be available in your neovim runtime.
 require('lazy').setup({
   -- NOTE: First, some plugins that don't require any configuration
-
+  --
+  -- {
+  --   "folke/noice.nvim",
+  --   event = "VeryLazy",
+  --   opts = {
+  --     -- add any options here
+  --   },
+  --   dependencies = {
+  --     -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
+  --     "MunifTanjim/nui.nvim",
+  --     -- OPTIONAL:
+  --     --   `nvim-notify` is only needed, if you want to use the notification view.
+  --     --   If not available, we use `mini` as the fallback
+  --     "rcarriga/nvim-notify",
+  --   }
+  -- },
+  {
+    'nvim-tree/nvim-tree.lua',
+    dependencies = {
+      'nvim-tree/nvim-web-devicons'
+    },
+    {
+      'Shatur/neovim-ayu'
+    },
+  },
+  {
+    "phaazon/hop.nvim",
+    event = "BufRead",
+    config = function()
+      require("hop").setup()
+      vim.api.nvim_set_keymap("n", "s", ":HopChar1MW<cr>", { silent = true })
+      vim.api.nvim_set_keymap("n", "S", ":HopWord<cr>", { silent = true })
+      vim.api.nvim_set_keymap("n", "9", ":IvanSnipeCopyWord<cr>", { silent = true })
+      vim.api.nvim_set_keymap("n", "<leader>9", ":IvanSnipeCopyWholeWord<cr>", { silent = true })
+      vim.api.nvim_set_keymap("n", "<leader>0", ":IvanSnipeCopyLine<cr>", { silent = true })
+    end,
+  },
+  { 'nvim-telescope/telescope-dap.nvim' },
+  {
+    'nvim-pack/nvim-spectre',
+    dependencies = {
+      'nvim-lua/plenary.nvim'
+    },
+  },
+  {'stevearc/oil.nvim'},
   -- Git related plugins
   'tpope/vim-fugitive',
   'tpope/vim-rhubarb',
@@ -113,53 +157,53 @@ require('lazy').setup({
 
   -- Useful plugin to show you pending keybinds.
   { 'folke/which-key.nvim', opts = {} },
-  {
-    -- Adds git related signs to the gutter, as well as utilities for managing changes
-    'lewis6991/gitsigns.nvim',
-    opts = {
-      -- See `:help gitsigns.txt`
-      signs = {
-        add = { text = '+' },
-        change = { text = '~' },
-        delete = { text = '_' },
-        topdelete = { text = '‾' },
-        changedelete = { text = '~' },
-      },
-      on_attach = function(bufnr)
-        vim.keymap.set('n', '<leader>hp', require('gitsigns').preview_hunk, { buffer = bufnr, desc = 'Preview git hunk' })
-
-        -- don't override the built-in and fugitive keymaps
-        local gs = package.loaded.gitsigns
-        vim.keymap.set({ 'n', 'v' }, ']c', function()
-          if vim.wo.diff then
-            return ']c'
-          end
-          vim.schedule(function()
-            gs.next_hunk()
-          end)
-          return '<Ignore>'
-        end, { expr = true, buffer = bufnr, desc = 'Jump to next hunk' })
-        vim.keymap.set({ 'n', 'v' }, '[c', function()
-          if vim.wo.diff then
-            return '[c'
-          end
-          vim.schedule(function()
-            gs.prev_hunk()
-          end)
-          return '<Ignore>'
-        end, { expr = true, buffer = bufnr, desc = 'Jump to previous hunk' })
-      end,
-    },
-  },
-
   -- {
-  --   -- Theme inspired by Atom
-  --   'navarasu/onedark.nvim',
-  --   priority = 1000,
-  --   config = function()
-  --     vim.cmd.colorscheme 'onedark'
-  --   end,
+  --   -- Adds git related signs to the gutter, as well as utilities for managing changes
+  --   'lewis6991/gitsigns.nvim',
+  --   opts = {
+  --     -- See `:help gitsigns.txt`
+  --     signs = {
+  --       add = { text = '+' },
+  --       change = { text = '~' },
+  --       delete = { text = '_' },
+  --       topdelete = { text = '‾' },
+  --       changedelete = { text = '~' },
+  --     },
+  --     on_attach = function(bufnr)
+  --       vim.keymap.set('n', '<leader>hp', require('gitsigns').preview_hunk, { buffer = bufnr, desc = 'Preview git hunk' })
+  --
+  --       -- don't override the built-in and fugitive keymaps
+  --       local gs = package.loaded.gitsigns
+  --       vim.keymap.set({ 'n', 'v' }, ']c', function()
+  --         if vim.wo.diff then
+  --           return ']c'
+  --         end
+  --         vim.schedule(function()
+  --           gs.next_hunk()
+  --         end)
+  --         return '<Ignore>'
+  --       end, { expr = true, buffer = bufnr, desc = 'Jump to next hunk' })
+  --       vim.keymap.set({ 'n', 'v' }, '[c', function()
+  --         if vim.wo.diff then
+  --           return '[c'
+  --         end
+  --         vim.schedule(function()
+  --           gs.prev_hunk()
+  --         end)
+  --         return '<Ignore>'
+  --       end, { expr = true, buffer = bufnr, desc = 'Jump to previous hunk' })
+  --     end,
+  --   },
   -- },
+  --
+   -- {
+   --   -- Theme inspired by Atom
+   --   'navarasu/onedark.nvim',
+   --   priority = 1000,
+   --   config = function()
+   --     vim.cmd.colorscheme 'onedark'
+   --   end,
+   -- },
 
   {
     -- Set lualine as statusline
@@ -168,22 +212,22 @@ require('lazy').setup({
     opts = {
       options = {
         icons_enabled = false,
-        theme = 'onedark',
+        theme = 'ayu',
         component_separators = '|',
         section_separators = '',
       },
     },
   },
 
-  {
-    -- Add indentation guides even on blank lines
-    'lukas-reineke/indent-blankline.nvim',
-    -- Enable `lukas-reineke/indent-blankline.nvim`
-    -- See `:help ibl`
-    main = 'ibl',
-    opts = {},
-  },
-
+  -- {
+  --   -- Add indentation guides even on blank lines
+  --   'lukas-reineke/indent-blankline.nvim',
+  --   -- Enable `lukas-reineke/indent-blankline.nvim`
+  --   -- See `:help ibl`
+  --   main = 'ibl',
+  --   opts = {},
+  -- },
+  --
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim', opts = {} },
 
@@ -216,21 +260,29 @@ require('lazy').setup({
     },
     build = ':TSUpdate',
   },
-
-
   {
-    "nvim-neo-tree/neo-tree.nvim",
-    version = "*",
+    "mfussenegger/nvim-dap",
     dependencies = {
-      "nvim-lua/plenary.nvim",
-      "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
-      "MunifTanjim/nui.nvim",
+      "theHamsta/nvim-dap-virtual-text",
+      "rcarriga/nvim-dap-ui",
+      "leoluz/nvim-dap-go"
     },
-    config = function ()
-      require('neo-tree').setup {
-      }
-    end,
   },
+
+  -- NEO TREE
+  -- {
+  --   "nvim-neo-tree/neo-tree.nvim",
+  --   version = "*",
+  --   dependencies = {
+  --     "nvim-lua/plenary.nvim",
+  --     "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
+  --     "MunifTanjim/nui.nvim",
+  --   },
+  --   config = function ()
+  --     require('neo-tree').setup {
+  --     }
+  --   end,
+  -- },
   { "anuvyklack/windows.nvim",
     dependencies = {
       "anuvyklack/middleclass",
@@ -262,6 +314,8 @@ require('lazy').setup({
 { 'rktjmp/lush.nvim' },
 
 
+
+
 vim.cmd([[ let g:neo_tree_remove_legacy_commands = 1 ]])
 
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
@@ -281,12 +335,95 @@ vim.cmd([[ let g:neo_tree_remove_legacy_commands = 1 ]])
 }, {})
 -- Keymaps for better default experience
 -- See `:help vim.keymap.set()`
+
+
+require("settings")
+
+vim.keymap.set('n', '<M-b>', ":NvimTreeToggle<cr>", {})
+vim.keymap.set('n', '<c-h>', ":NvimTreeResize -1 <cr>", {})
+vim.keymap.set('n', '<c-l>', ":NvimTreeResize +1 <cr>", {})
+
+-- NVIM WEB DEVICONS
+require("nvim-web-devicons").setup({
+  -- Exclude Git-related icons
+  global_exclude = {
+    ".*%.git.*",
+    ".*%.gitignore.*",
+    ".*%.gitmodules.*",
+    ".*%.gitattributes.*",
+  },
+})
+
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
+-- set termguicolors to enable highlight groups
+vim.opt.termguicolors = true
+
+
+-- vim.g.nvim_tree_show_icons = {
+--   git = 0,
+-- }
+
+-- vim.g.nvim_tree_icons = {
+--   default = '',
+-- }
+--
+-- NVIM TREE
+require("nvim-tree").setup({
+  sort = {
+    sorter = "case_sensitive",
+  },
+  view = {
+    width = 20,
+  },
+  renderer = {
+    group_empty = true,
+  },
+  filters = {
+    dotfiles = true,
+  },
+  git = {
+    enable = false,
+  }
+})
+
+
+
+vim.api.nvim_create_user_command('IvanSnipeCopyWord',
+function()
+  vim.cmd.HopChar1MW()
+  vim.cmd('normal! yiw')
+  vim.cmd.execute [["normal \<c-o>"]]
+end, {}
+)
+
+vim.api.nvim_create_user_command('IvanSnipeCopyWholeWord',
+function()
+  vim.cmd.HopChar1MW()
+  vim.cmd('normal! yiW')
+  vim.cmd.execute [["normal \<c-o>"]]
+end, {}
+)
+
+vim.api.nvim_create_user_command('IvanSnipeCopyLine',
+function()
+  vim.cmd.HopLine()
+  vim.cmd('normal! yy')
+  vim.cmd.execute [["normal \<c-o>"]]
+end, {}
+)
+
+
+require("oil-nvim")
+--require("noice-nvim")
+
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 
 
 vim.keymap.set('n', '<leader>1', ":only<CR>", {})
-vim.keymap.set('n', '<leader>2', ":sp<CR>", {})
-vim.keymap.set('n', '<leader>3', ":vsp<CR>", {})
+vim.keymap.set('n', '<leader>2', ":sp<CR><C-w>w", {})
+vim.keymap.set('n', '<leader>3', ":vsp<CR><C-w>w", {})
 vim.keymap.set('n', '<leader>4', "<C-w>=", {})
 
 
@@ -303,14 +440,14 @@ vim.keymap.set('n', '<M-l>', ":wincmd l<CR>", {})
 vim.keymap.set('n', '<M-q>', ":q!<CR>", {})
 vim.keymap.set('n', '<M-w>', ":w!<CR>", {})
 
-vim.keymap.set('n', '<M-.>', "<C-d>zz", {})
-vim.keymap.set('n', '<M-,>', "<C-u>zz", {})
+vim.keymap.set('n', '<M-.>', "<C-d>", {})
+vim.keymap.set('n', '<M-,>', "<C-u>", {})
 
 vim.keymap.set('n', '<M-o>', "<C-o>", {})
 vim.keymap.set('n', '<M-i>', "<C-u>", {})
 
-vim.keymap.set('n', '<leader>j', ':Neotree<CR>', {})
-
+vim.keymap.set('n', '<leader>j', ':Oil<CR>', {})
+vim.keymap.set('n', '<leader>k', ':bd<CR>', {})
 
 vim.keymap.set('n', '<M-f>', ':WindowsMaximize<CR>', {})
 
@@ -326,6 +463,10 @@ vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous dia
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
+
+vim.keymap.set('n', '<leader>fc', ":cd %:p:h<CR>", { desc = 'cd int current file directory' })
+
+
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
@@ -391,8 +532,8 @@ end
 vim.api.nvim_create_user_command('LiveGrepGitRoot', live_grep_git_root, {})
 
 -- See `:help telescope.builtin`
-vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
-vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
+vim.keymap.set('n', '<leader>ir', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
+vim.keymap.set('n', '<leader>if', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
 vim.keymap.set('n', '<leader>/', function()
   -- You can pass additional configuration to telescope to change theme, layout, etc.
   require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
@@ -401,14 +542,27 @@ vim.keymap.set('n', '<leader>/', function()
   })
 end, { desc = '[/] Fuzzily search in current buffer' })
 
-vim.keymap.set('n', '<leader>gf', require('telescope.builtin').git_files, { desc = 'Search [G]it [F]iles' })
-vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
-vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
-vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
-vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
-vim.keymap.set('n', '<leader>sG', ':LiveGrepGitRoot<cr>', { desc = '[S]earch by [G]rep on Git Root' })
-vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
+vim.keymap.set('n', '<leader>iw', require('telescope.builtin').git_files, { desc = 'Search [G]it [F]iles' })
+vim.keymap.set('n', '<leader>ie', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
+vim.keymap.set('n', '<leader>iE', ":IvanFindFileFromHome<CR>", { desc = '[S]earch [F]iles' })
+vim.keymap.set('n', '<leader>ih', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
+vim.keymap.set('n', '<leader>is', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
+vim.keymap.set('n', '<leader>ia', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
+vim.keymap.set('n', '<leader>iA', ':LiveGrepGitRoot<cr>', { desc = '[S]earch by [G]rep on Git Root' })
+vim.keymap.set('n', '<leader>id', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
+vim.keymap.set('n', '<leader>ic', require('telescope.builtin').commands, { desc = '[S]earch [C]ommands' })
+vim.keymap.set('n', '<leader>im', require('telescope.builtin').man_pages, { desc = '[S]earch [C]ommands' })
+vim.keymap.set('n', '<leader>iq', require('telescope.builtin').registers, { desc = '[S]earch [R]egisters' })
+vim.keymap.set('n', '<leader>gs', require('telescope.builtin').git_status, { desc = '[S]earch [R]egisters' })
 vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
+
+vim.keymap.set('n', '<leader>ws', "<C-w>x", { desc = '[S]wap Windows' })
+
+vim.keymap.set('n', '<C-h>', "<C-w>2> ", { desc = 'Resize to left' })
+vim.keymap.set('n', '<C-l>', "<C-w>2<", { desc = 'Resize to right' })
+vim.keymap.set('n', '<C-k>', "<C-w>2+", { desc = 'Resize to up' })
+vim.keymap.set('n', '<C-j>', "<C-w>2-", { desc = 'Resize to down' })
+
 
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
@@ -488,6 +642,14 @@ local on_attach = function(_, bufnr)
   --
   -- In this case, we create a function that lets us more easily define mappings specific
   -- for LSP related items. It sets the mode, buffer and description for us each time.
+  --
+  -- vim.api.nvim_buf_set_option(bufnr, 'show_virtual_text', false)
+  -- if _.name == 'mason' then
+  --   -- Disable virtual text for Mason language server
+  --   _.resolved_capabilities.show_virtual_text = false
+  -- end
+
+
   local nmap = function(keys, func, desc)
     if desc then
       desc = 'LSP: ' .. desc
@@ -496,19 +658,19 @@ local on_attach = function(_, bufnr)
     vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
   end
 
-  nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
-  nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
+  nmap('<leader>lr', vim.lsp.buf.rename, '[R]e[n]ame')
+  nmap('<leader>la', vim.lsp.buf.code_action, '[C]ode [A]ction')
 
   nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
   nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
   nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
   nmap('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
-  nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
-  nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
+  nmap('<leader>ls', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
+  nmap('<leader>lS', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
 
   -- See `:help K` for why this keymap
   nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
-  nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
+-- nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
 
   -- Lesser used LSP functionality
   nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
@@ -524,6 +686,212 @@ local on_attach = function(_, bufnr)
   end, { desc = 'Format current buffer with LSP' })
 end
 
+-- DAP UI
+--require("dapui").setup()
+vim.api.nvim_set_keymap("n", "<leader>di", ":lua require('dapui').toggle()<CR>", { noremap = true, silent = true })
+
+local custom_layout = {
+  {
+    relative = "editor",
+    style = "minimal",
+    height = 15,
+    width = 120,
+    row = 0,
+    col = 0,
+  },
+}
+
+-- DAP TELESCOPE
+require('telescope').load_extension('dap')
+
+vim.keymap.set('n', '<leader>dc', ":lua require'telescope'.extensions.dap.commands{}<cr>", {})
+vim.keymap.set('n', '<leader>df', ":lua require'telescope'.extensions.dap.frames{}<cr>", {})
+vim.keymap.set('n', '<leader>db', ":lua require'telescope'.extensions.dap.list_breakpoints{}<cr>", {})
+
+ require("dapui").setup(
+{
+    controls = {
+      element = "repl",
+      enabled = true,
+      icons = {
+        disconnect = "",
+        pause = "",
+        play = "",
+        run_last = "",
+        step_back = "",
+        step_into = "",
+        step_out = "",
+        step_over = "",
+        terminate = ""
+      }
+    },
+    element_mappings = {},
+    expand_lines = true,
+    floating = {
+      border = "single",
+      mappings = {
+        close = { "q", "<Esc>" }
+      }
+    },
+    force_buffers = true,
+    icons = {
+      collapsed = "",
+      current_frame = "",
+      expanded = ""
+    },
+    layouts = { {
+        elements = { {
+            id = "scopes",
+            size = 1 
+          },
+          -- {
+          --   id = "breakpoints",
+          --   size = 0.25
+          -- }, {
+          --   id = "stacks",
+          --   size = 0.25
+          -- }, {
+          --   id = "watches",
+          --   size = 0.25
+          -- }
+        },
+        position = "bottom",
+        size = 10
+      },
+       {
+         elements = {
+           {
+           id = "stacks",
+           size = 1 
+         },
+           --   id = "repl",
+           --   size = 0.5
+           -- }, {
+           --   id = "console",
+           --   size = 0.5
+            },
+         position = "right",
+         size = 60
+       }
+    },
+    mappings = {
+      edit = "e",
+      -- expand = { "<CR>", "<2-LeftMouse>" },
+      expand = { "<CR>", "<LeftRelease>", "<TAB>" },
+      open = "o",
+      remove = "d",
+      repl = "r",
+      toggle = "t"
+    },
+    render = {
+      indent = 1,
+      max_value_lines = 100
+    }
+ })
+
+-- require("dapui").setup({
+--   icons = { expanded = "▾", collapsed = "▸" },
+--   mappings = {
+--     -- You can customize key mappings here
+--   },
+--   sidebar = {
+--     open_on_start = true,
+--     elements = {
+--       -- Configure only the locals window
+--       { id = "scopes", size = 0.25 },
+--     },
+--     width = 30,
+--   },
+--   tray = {
+--     open_on_start = true,
+--     elements = { "repl" },
+--     size = 10,
+--   },
+--   floating = { max_height = nil, max_width = nil },
+--   windows = custom_layout,
+-- })
+--
+-- DAP VIRTUAL TEXT
+require("nvim-dap-virtual-text").setup {
+    enabled = true,                        -- enable this plugin (the default)
+    enabled_commands = true,               -- create commands DapVirtualTextEnable, DapVirtualTextDisable, DapVirtualTextToggle, (DapVirtualTextForceRefresh for refreshing when debug adapter did not notify its termination)
+    highlight_changed_variables = true,    -- highlight changed values with NvimDapVirtualTextChanged, else always NvimDapVirtualText
+    highlight_new_as_changed = true,      -- highlight new variables in the same way as changed variables (if highlight_changed_variables)
+    show_stop_reason = true,               -- show stop reason when stopped for exceptions
+    commented = false,                     -- prefix virtual text with comment string
+    only_first_definition = true,          -- only show virtual text at first definition (if there are multiple)
+    all_references = false,                -- show virtual text on all all references of the variable (not only definitions)
+    clear_on_continue = false,             -- clear virtual text on "continue" (might cause flickering when stepping)
+    --- A callback that determines how a variable is displayed or whether it should be omitted
+    --- @param variable Variable https://microsoft.github.io/debug-adapter-protocol/specification#Types_Variable
+    --- @param buf number
+    --- @param stackframe dap.StackFrame https://microsoft.github.io/debug-adapter-protocol/specification#Types_StackFrame
+    --- @param node userdata tree-sitter node identified as variable definition of reference (see `:h tsnode`)
+    --- @param options nvim_dap_virtual_text_options Current options for nvim-dap-virtual-text
+    --- @return string|nil A text how the virtual text should be displayed or nil, if this variable shouldn't be displayed
+    display_callback = function(variable, buf, stackframe, node, options)
+      if options.virt_text_pos == 'inline' then
+        return ' = ' .. variable.value
+      else
+        return variable.name .. ' = ' .. variable.value
+      end
+    end,
+    -- position of virtual text, see `:h nvim_buf_set_extmark()`, default tries to inline the virtual text. Use 'eol' to set to end of line
+    virt_text_pos = vim.fn.has 'nvim-0.10' == 1 and 'inline' or 'eol',
+
+    -- experimental features:
+    all_frames = false,                    -- show virtual text for all stack frames not only current. Only works for debugpy on my machine.
+    virt_lines = false,                    -- show virtual lines instead of virtual text (will flicker!)
+    virt_text_win_col = nil                -- position the virtual text at a fixed window column (starting from the first text column) ,
+                                           -- e.g. 80 to position at column 80, see `:h nvim_buf_set_extmark()`
+}
+
+-- DAP GO
+require('dap-go').setup {
+  -- Additional dap configurations can be added.
+  -- dap_configurations accepts a list of tables where each entry
+  -- represents a dap configuration. For more details do:
+  -- :help dap-configuration
+  dap_configurations = {
+    {
+      -- Must be "go" or it will be ignored by the plugin
+      type = "go",
+      name = "Attach remote",
+      mode = "remote",
+      request = "attach",
+    },
+  },
+  -- delve configurations
+  delve = {
+    -- the path to the executable dlv which will be used for debugging.
+    -- by default, this is the "dlv" executable on your PATH.
+    path = "dlv",
+    -- time to wait for delve to initialize the debug session.
+    -- default to 20 seconds
+    initialize_timeout_sec = 20,
+    -- a string that defines the port to start delve debugger.
+    -- default to string "${port}" which instructs nvim-dap
+    -- to start the process in a random available port
+    port = "${port}",
+    -- additional args to pass to dlv
+    args = {},
+    -- the build flags that are passed to delve.
+    -- defaults to empty string, but can be used to provide flags
+    -- such as "-tags=unit" to make sure the test suite is
+    -- compiled during debugging, for example.
+    -- passing build flags using args is ineffective, as those are
+    -- ignored by delve in dap mode.
+    build_flags = "",
+  },
+}
+
+vim.keymap.set('n', '<M-]>', ":DapToggleBreakpoint <cr>", {})
+vim.keymap.set('n', '<M-9>', ":DapStepOut <cr>", {})
+vim.keymap.set('n', '<M-0>', ":DapStepOver <cr>", {})
+vim.keymap.set('n', '<M-->', ":DapStepIn <cr>", {})
+vim.keymap.set('n', '<M-=>', ":DapContinue <cr>", {})
+vim.keymap.set('n', '<M-+>', ":DapTerminate <cr>", {})
+
 -- document existing key chains
 require('which-key').register {
   ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
@@ -533,6 +901,7 @@ require('which-key').register {
   ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
   ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
   ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
+  ['<leader>l'] = { name = '[L]SP', _ = 'which_key_ignore' },
 }
 
 -- mason-lspconfig requires that these setup functions are called in this order
@@ -548,6 +917,9 @@ require('mason-lspconfig').setup()
 --
 --  If you want to override the default filetypes that your language server will attach to you can
 --  define the property 'filetypes' to the map in question.
+--
+
+
 local servers = {
    clangd = {},
    gopls = {},
@@ -646,5 +1018,39 @@ cmp.setup {
   },
 }
 
--- The line beneath this is called `modeline`. See `:help modeline`
--- vim: ts=2 sts=2 sw=2 et
+
+
+
+
+
+vim.api.nvim_create_user_command('IvanFindFileFromHome',
+function()
+  require('telescope.builtin').find_files({
+      prompt_title = 'Find Files',
+      cwd = vim.fn.expand('$HOME'),
+      no_ignore = true,
+      hidden = true
+  })
+  -- vim.cmd.HopLine()
+  -- vim.cmd('normal! yy')
+  -- vim.cmd.execute [["normal \<c-o>"]]
+end, {}
+)
+
+
+-- vim.diagnostic.config({
+--   virtual_text = false,
+-- })
+-- VIMM
+-- vim.api.nvim_create_autocmd({"BufEnter", "BufWinEnter"}, {
+--   pattern = {"*.lua"},
+--   command = "echo 'Entering a C or C++ file'",
+-- })
+-- LUA
+--
+--  vim.api.nvim_create_autocmd({"BufEnter", "BufWinEnter"}, {
+--   pattern = {"*.lua"},
+--   callback = function()
+--     for i=1,10 do print(i) end
+--   end,
+-- })
