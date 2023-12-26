@@ -338,11 +338,6 @@ vim.cmd([[ let g:neo_tree_remove_legacy_commands = 1 ]])
 
 
 require("settings")
-
-vim.keymap.set('n', '<M-b>', ":NvimTreeToggle<cr>", {})
-vim.keymap.set('n', '<c-h>', ":NvimTreeResize -1 <cr>", {})
-vim.keymap.set('n', '<c-l>', ":NvimTreeResize +1 <cr>", {})
-
 -- NVIM WEB DEVICONS
 require("nvim-web-devicons").setup({
   -- Exclude Git-related icons
@@ -369,6 +364,15 @@ vim.opt.termguicolors = true
 --   default = '',
 -- }
 --
+--
+--
+
+
+ -- vim.keymap.set('n', '<C-l>', "<C-w>2> ", { desc = 'Resize to left' })
+ --  vim.keymap.set('n', '<C-h>', "<C-w>2<", { desc = 'Resize to right' })
+ --  vim.keymap.set('n', '<C-k>', "<C-w>2+", { desc = 'Resize to up' })
+ --  vim.keymap.set('n', '<C-j>', "<C-w>2-", { desc = 'Resize to down' })
+ --
 -- NVIM TREE
 require("nvim-tree").setup({
   sort = {
@@ -388,7 +392,14 @@ require("nvim-tree").setup({
   }
 })
 
+vim.keymap.set('n', '<C-h>', "<C-w>2< ", { desc = 'Resize to left' })
+vim.keymap.set('n', '<C-l>', "<C-w>2>", { desc = 'Resize to right' })
+vim.keymap.set('n', '<C-k>', "<C-w>2+", { desc = 'Resize to up' })
+vim.keymap.set('n', '<C-j>', "<C-w>2-", { desc = 'Resize to down' })
 
+vim.keymap.set('n', '<M-b>', ":NvimTreeToggle<cr>", {})
+vim.keymap.set('n', '<C-n>', ":NvimTreeResize -1 <cr>", {})
+vim.keymap.set('n', '<C-m>', ":NvimTreeResize +1 <cr>", {})
 
 vim.api.nvim_create_user_command('IvanSnipeCopyWord',
 function()
@@ -558,10 +569,6 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = 
 
 vim.keymap.set('n', '<leader>ws', "<C-w>x", { desc = '[S]wap Windows' })
 
-vim.keymap.set('n', '<C-h>', "<C-w>2> ", { desc = 'Resize to left' })
-vim.keymap.set('n', '<C-l>', "<C-w>2<", { desc = 'Resize to right' })
-vim.keymap.set('n', '<C-k>', "<C-w>2+", { desc = 'Resize to up' })
-vim.keymap.set('n', '<C-j>', "<C-w>2-", { desc = 'Resize to down' })
 
 
 -- [[ Configure Treesitter ]]
@@ -664,6 +671,7 @@ local on_attach = function(_, bufnr)
   nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
   nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
   nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
+
   nmap('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
   nmap('<leader>ls', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
   nmap('<leader>lS', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
@@ -789,6 +797,29 @@ vim.keymap.set('n', '<leader>db', ":lua require'telescope'.extensions.dap.list_b
     }
  })
 
+require("dap").adapters.lldb = {
+	type = "executable",
+	command = "/usr/bin/lldb-vscode", -- adjust as needed
+	name = "lldb",
+}
+
+local lldb = {
+	name = "Launch lldb",
+	type = "lldb", -- matches the adapter
+	request = "launch", -- could also attach to a currently running process
+	program = function()
+		return vim.fn.input(
+			"Path to executable: ",
+			vim.fn.getcwd() .. "/",
+			"file"
+		)
+	end,
+	cwd = "${workspaceFolder}",
+	stopOnEntry = false,
+	args = {},
+	runInTerminal = false,
+}
+
 -- require("dapui").setup({
 --   icons = { expanded = "▾", collapsed = "▸" },
 --   mappings = {
@@ -816,9 +847,9 @@ require("nvim-dap-virtual-text").setup {
     enabled = true,                        -- enable this plugin (the default)
     enabled_commands = true,               -- create commands DapVirtualTextEnable, DapVirtualTextDisable, DapVirtualTextToggle, (DapVirtualTextForceRefresh for refreshing when debug adapter did not notify its termination)
     highlight_changed_variables = true,    -- highlight changed values with NvimDapVirtualTextChanged, else always NvimDapVirtualText
-    highlight_new_as_changed = true,      -- highlight new variables in the same way as changed variables (if highlight_changed_variables)
+    highlight_new_as_changed = false,      -- highlight new variables in the same way as changed variables (if highlight_changed_variables)
     show_stop_reason = true,               -- show stop reason when stopped for exceptions
-    commented = false,                     -- prefix virtual text with comment string
+    commented = true,                     -- prefix virtual text with comment string
     only_first_definition = true,          -- only show virtual text at first definition (if there are multiple)
     all_references = false,                -- show virtual text on all all references of the variable (not only definitions)
     clear_on_continue = false,             -- clear virtual text on "continue" (might cause flickering when stepping)
