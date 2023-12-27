@@ -204,7 +204,7 @@ require('lazy').setup({
    --     vim.cmd.colorscheme 'onedark'
    --   end,
    -- },
-
+   --
   {
     -- Set lualine as statusline
     'nvim-lualine/lualine.nvim',
@@ -378,9 +378,11 @@ require("nvim-tree").setup({
   sort = {
     sorter = "case_sensitive",
   },
-  view = {
-    width = 20,
-  },
+  -- view = {
+  --   width = 20,
+  -- },
+  --
+  view = { width = 20, adaptive_size = true },
   renderer = {
     group_empty = true,
   },
@@ -668,13 +670,23 @@ local on_attach = function(_, bufnr)
   nmap('<leader>lr', vim.lsp.buf.rename, '[R]e[n]ame')
   nmap('<leader>la', vim.lsp.buf.code_action, '[C]ode [A]ction')
 
-  nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
+  vim.api.nvim_exec([[
+  augroup CursorCentering
+    autocmd!
+    autocmd CursorMoved * execute 'normal! zz'
+  augroup END
+]], false)
+
+  nmap('gd',
+    require('telescope.builtin').lsp_definitions , '[G]oto [D]efinition')
   nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
   nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
 
   nmap('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
   nmap('<leader>ls', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
   nmap('<leader>lS', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
+  nmap('<leader>ll', ":LspStop<cr>", '[S]top Lsp')
+  nmap('<leader>lL', ":LspStart<cr>", '[S]top Lsp')
 
   -- See `:help K` for why this keymap
   nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
@@ -1085,3 +1097,17 @@ end, {}
 --     for i=1,10 do print(i) end
 --   end,
 -- })
+
+
+vim.api.nvim_create_autocmd({ "VimResized" }, {
+    desc = "Resize nvim-tree if nvim window got resized",
+
+    group = vim.api.nvim_create_augroup("NvimTreeResize", { clear = true }),
+    callback = function()
+        local percentage = 15
+
+        local ratio = percentage / 100
+        local width = math.floor(vim.go.columns * ratio)
+        vim.cmd("tabdo NvimTreeResize " .. width)
+    end,
+})
