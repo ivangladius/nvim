@@ -85,6 +85,9 @@ require('lazy').setup({
   --   }
   -- },
   {
+    "challenger-deep-theme/vim"
+  },
+  {
     'nvim-tree/nvim-tree.lua',
     dependencies = {
       'nvim-tree/nvim-web-devicons'
@@ -205,6 +208,8 @@ require('lazy').setup({
    --   end,
    -- },
    --
+  { "ewilazarus/preto" },
+
   {
     -- Set lualine as statusline
     'nvim-lualine/lualine.nvim',
@@ -670,12 +675,12 @@ local on_attach = function(_, bufnr)
   nmap('<leader>lr', vim.lsp.buf.rename, '[R]e[n]ame')
   nmap('<leader>la', vim.lsp.buf.code_action, '[C]ode [A]ction')
 
-  vim.api.nvim_exec([[
-  augroup CursorCentering
-    autocmd!
-    autocmd CursorMoved * execute 'normal! zz'
-  augroup END
-]], false)
+--   vim.api.nvim_exec([[
+--   augroup CursorCentering
+--     autocmd!
+--     autocmd CursorMoved * execute 'normal! zz'
+--   augroup END
+-- ]], false)
 
   nmap('gd',
     require('telescope.builtin').lsp_definitions , '[G]oto [D]efinition')
