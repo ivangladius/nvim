@@ -96,6 +96,56 @@ require('lazy').setup({
       'Shatur/neovim-ayu'
     },
   },
+  -- plugins/rest.lua
+ --  {
+ --    "rest-nvim/rest.nvim",
+ --    dependencies = { "nvim-lua/plenary.nvim" },
+ --    config = function()
+ --      require("rest-nvim").setup({
+ -- -- Open request results in a horizontal split
+ --      result_split_horizontal = false,
+ --      -- Keep the http file buffer above|left when split horizontal|vertical
+ --      result_split_in_place = false,
+ --      -- stay in current windows (.http file) or change to results window (default)
+ --      stay_in_current_window_after_split = false,
+ --      -- Skip SSL verification, useful for unknown certificates
+ --      skip_ssl_verification = false,
+ --      -- Encode URL before making request
+ --      encode_url = true,
+ --      -- Highlight request on run
+ --      highlight = {
+ --        enabled = true,
+ --        timeout = 150,
+ --      },
+ --      result = {
+ --        -- toggle showing URL, HTTP info, headers at top the of result window
+ --        show_url = true,
+ --        -- show the generated curl command in case you want to launch
+ --        -- the same request via the terminal (can be verbose)
+ --        show_curl_command = false,
+ --        show_http_info = true,
+ --        show_headers = true,
+ --        -- table of curl `--write-out` variables or false if disabled
+ --        -- for more granular control see Statistics Spec
+ --        show_statistics = false,
+ --        -- executables or functions for formatting response body [optional]
+ --        -- set them to false if you want to disable them
+ --        formatters = {
+ --          json = "jq",
+ --          html = function(body)
+ --            return vim.fn.system({"tidy", "-i", "-q", "-"}, body)
+ --          end
+ --        },
+ --      },
+ --      -- Jump to request line on run
+ --      jump_to_request = false,
+ --      env_file = '.env',
+ --      custom_dynamic_variables = {},
+ --      yank_dry_run = true,
+ --      search_back = true,
+ --      })
+ --    end
+ --  },
   {
     "phaazon/hop.nvim",
     event = "BufRead",
@@ -199,15 +249,15 @@ require('lazy').setup({
   --   },
   -- },
   --
-   -- {
-   --   -- Theme inspired by Atom
-   --   'navarasu/onedark.nvim',
-   --   priority = 1000,
-   --   config = function()
-   --     vim.cmd.colorscheme 'onedark'
-   --   end,
-   -- },
-   --
+   {
+     -- Theme inspired by Atom
+     'navarasu/onedark.nvim',
+     priority = 1000,
+     config = function()
+       vim.cmd.colorscheme 'onedark'
+     end,
+   },
+
   { "ewilazarus/preto" },
 
   {
@@ -584,7 +634,7 @@ vim.keymap.set('n', '<leader>ws', "<C-w>x", { desc = '[S]wap Windows' })
 vim.defer_fn(function()
   require('nvim-treesitter.configs').setup {
     -- Add languages to be installed here that you want installed for treesitter
-    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash' },
+    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash', 'http', 'json' },
 
     -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
     auto_install = false,
@@ -732,6 +782,7 @@ require('telescope').load_extension('dap')
 vim.keymap.set('n', '<leader>dc', ":lua require'telescope'.extensions.dap.commands{}<cr>", {})
 vim.keymap.set('n', '<leader>df', ":lua require'telescope'.extensions.dap.frames{}<cr>", {})
 vim.keymap.set('n', '<leader>db', ":lua require'telescope'.extensions.dap.list_breakpoints{}<cr>", {})
+vim.keymap.set('n', '<leader>de', ":lua require('dapui').eval()<cr>", {})
 
  require("dapui").setup(
 {
@@ -787,8 +838,11 @@ vim.keymap.set('n', '<leader>db', ":lua require'telescope'.extensions.dap.list_b
          elements = {
            {
            id = "stacks",
-           size = 1 
-         },
+           size = 1
+         },{
+            id = "watches",
+            size = 0.25
+          },
            --   id = "repl",
            --   size = 0.5
            -- }, {
