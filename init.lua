@@ -87,6 +87,7 @@ require('lazy').setup({
   {
     "challenger-deep-theme/vim"
   },
+  {'kovisoft/slimv'},
   {
     'nvim-tree/nvim-tree.lua',
     dependencies = {
@@ -613,6 +614,7 @@ end, { desc = '[/] Fuzzily search in current buffer' })
 vim.keymap.set('n', '<leader>iw', require('telescope.builtin').git_files, { desc = 'Search [G]it [F]iles' })
 vim.keymap.set('n', '<leader>ie', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
 vim.keymap.set('n', '<leader>iE', ":IvanFindFileFromHome<CR>", { desc = '[S]earch [F]iles' })
+vim.keymap.set('n', '<leader>iC', ":e ~/.config/nvim/init.lua<CR>", { desc = 'Open config' })
 vim.keymap.set('n', '<leader>ih', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
 vim.keymap.set('n', '<leader>is', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
 vim.keymap.set('n', '<leader>ia', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
@@ -1121,10 +1123,6 @@ cmp.setup {
 }
 
 
-
-
-
-
 vim.api.nvim_create_user_command('IvanFindFileFromHome',
 function()
   require('telescope.builtin').find_files({
@@ -1133,8 +1131,13 @@ function()
       no_ignore = true,
       hidden = true
   })
-  -- vim.cmd.HopLine()
-  -- vim.cmd('normal! yy')
+end, {}
+)
+
+vim.api.nvim_create_user_command('IvanFindConfig',
+function()
+    vim.cmd[[e ~/.config/nvim/init.lua]]
+  -- vim.cmd('normal! yiW')
   -- vim.cmd.execute [["normal \<c-o>"]]
 end, {}
 )

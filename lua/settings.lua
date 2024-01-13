@@ -11,11 +11,11 @@ require('ayu').setup({
    overrides = {}, -- A dictionary of group names, each associated with a dictionary of parameters (`bg`, `fg`, `sp` and `style`) and colors in hex.
 })
 
-vim.cmd("colorscheme darkblue")
+vim.cmd("colorscheme quiet")
 
 --
 -- vim.cmd('hi! Constant guibg=black  guifg=white')
--- vim.cmd('hi! String guibg=black  guifg=white')
+ vim.cmd('hi! String guibg=black  guifg=#DB4E29')
 -- vim.cmd('hi! Character guibg=black  guifg=white')
 -- vim.cmd('hi! Number guibg=black  guifg=white')
 -- vim.cmd('hi! Boolean guibg=black  guifg=white')
@@ -23,10 +23,10 @@ vim.cmd("colorscheme darkblue")
 --
 -- vim.cmd('hi! Tag guibg=black  guifg=blue')
 --
-vim.cmd('hi! Normal guifg=yellow')
- vim.cmd('hi! Function guibg=NONE  guifg=yellow gui=bold')
+-- vim.cmd('hi! Normal guifg=yellow')
+  vim.cmd('hi! Function guibg=NONE  guifg=NONE gui=bold')
 -- vim.cmd('hi! Comment guibg=black guifg=lightgrey ')
- vim.cmd('hi! Identifier guibg=NONE guifg=white')
+ -- vim.cmd('hi! Identifier guibg=NONE guifg=white')
 --
 -- vim.cmd('hi! Type guibg=black guifg=white gui=bold')
 -- vim.cmd('hi! StorageClass guibg=black guifg=white gui=bold')
@@ -65,7 +65,7 @@ vim.cmd('hi! Normal guifg=yellow')
   vim.cmd('hi! WhichKeyDesc guibg=black guifg=#11FF29 ')
   vim.cmd('hi! WhichKeyGroup guibg=black guifg=#11FF29 ')
 
-  vim.cmd('hi! Visual guibg=white guifg=blue ')
+  vim.cmd('hi! Visual guibg=NONE guifg=yellow ')
  --
   vim.cmd('hi! Pmenu guibg=#252A58 guifg=white ')
    vim.cmd('hi! PmenuSel guibg=#2F377E guifg=yellow gui=bold')
