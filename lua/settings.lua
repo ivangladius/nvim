@@ -6,16 +6,19 @@ vim.g.maplocalleader = ' '
 vim.cmd[[set cpoptions+=x]]
 vim.cmd[[set noswapfile]]
 
+
 require('ayu').setup({
    mirage = false, -- Set to `true` to use `mirage` variant instead of `dark` for dark background.
    overrides = {}, -- A dictionary of group names, each associated with a dictionary of parameters (`bg`, `fg`, `sp` and `style`) and colors in hex.
 })
 
-vim.cmd("colorscheme quiet")
+vim.cmd("colorscheme challenger_deep")
+-- vim.cmd("set background=light")
 
+vim.cmd("set scrolloff=999")
 --
 -- vim.cmd('hi! Constant guibg=black  guifg=white')
- vim.cmd('hi! String guibg=black  guifg=#DB4E29')
+-- vim.cmd('hi! String guibg=black  guifg=#DB4E29')
 -- vim.cmd('hi! Character guibg=black  guifg=white')
 -- vim.cmd('hi! Number guibg=black  guifg=white')
 -- vim.cmd('hi! Boolean guibg=black  guifg=white')
@@ -24,7 +27,7 @@ vim.cmd("colorscheme quiet")
 -- vim.cmd('hi! Tag guibg=black  guifg=blue')
 --
 -- vim.cmd('hi! Normal guifg=yellow')
-  vim.cmd('hi! Function guibg=NONE  guifg=NONE gui=bold')
+--  vim.cmd('hi! Function guibg=NONE  guifg=NONE gui=bold')
 -- vim.cmd('hi! Comment guibg=black guifg=lightgrey ')
  -- vim.cmd('hi! Identifier guibg=NONE guifg=white')
 --
@@ -80,7 +83,7 @@ vim.cmd("colorscheme quiet")
    vim.cmd('hi! CmpItemMenuKind guibg=NONE guifg=white ')
 
    vim.cmd('hi! NvimTreeCursorLine guibg=#0E1024 guifg=yellow ')
-   vim.cmd('hi! NvimTreeCursorColumn guibg=NONE guifg=yellow ')
+   vim.cmd('hi! NvimTreeCursorColumn guibg=black guifg=yellow ')
    vim.cmd('hi! NvimTreeFolderName guibg=NONE guifg=white ')
    vim.cmd('hi! NvimTreeOpenedFolderName guibg=NONE guifg=white ')
    vim.cmd('hi! NvimTreeSymlinkFolderName guibg=NONE guifg=white ')
