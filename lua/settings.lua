@@ -12,10 +12,10 @@ require('ayu').setup({
    overrides = {}, -- A dictionary of group names, each associated with a dictionary of parameters (`bg`, `fg`, `sp` and `style`) and colors in hex.
 })
 
-vim.cmd("colorscheme challenger_deep")
--- vim.cmd("set background=light")
+vim.cmd("colorscheme tokyonight-night")
+-- vim.cmd("set background=dark")
 
-vim.cmd("set scrolloff=999")
+-- vim.cmd("set scrolloff=999")
 --
 -- vim.cmd('hi! Constant guibg=black  guifg=white')
 -- vim.cmd('hi! String guibg=black  guifg=#DB4E29')
